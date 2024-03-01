@@ -5,8 +5,6 @@
 using namespace std;
 string Time(void);
 int main() {
-	cout << Time();
-	while (1);
 	string path_state = "Date/State.txt";
 	string path_log = "Date/log.txt";
 	ifstream fin;
