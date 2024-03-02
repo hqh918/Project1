@@ -37,7 +37,9 @@ int main() {
 		fout.open(path_mainlog, ios::app);
 		fout << Time() << "  The file was initialized.\n";
 		fout.close();
-		backup();
+		fout.open(path_state, ios::out);
+		fout << "Active";
+		fout.close();
 	}
 	else {
 		// Î´Íê³É
