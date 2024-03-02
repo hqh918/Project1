@@ -3,15 +3,19 @@
 #include <string>
 #include <ctime>
 #include <filesystem>
+#include <vector>
 namespace fs = std::filesystem;
 using namespace std;
+
 void backup(void);
 string Time(void); //获取当前时间并转为string类型
+
+const string path_state = "Date/State.txt";
+const string path_mainlog = "Date/log.txt";
+const string path_main = "Date/Main/";
+const string path_backuplog = "Backup/log.txt";
+
 int main() {
-	
-	string path_state = "Date/State.txt";
-	string path_log = "Date/log.txt";
-	string path_main = "Date/Main/";
 	ifstream fin;
 	ofstream fout;
 	fin.open(path_state, ios::in);
@@ -30,7 +34,7 @@ int main() {
 			}
 		}
 		fin.close();
-		fout.open(path_log, ios::app);
+		fout.open(path_mainlog, ios::app);
 		fout << Time() << "  The file was initialized.\n";
 		fout.close();
 		backup();
@@ -51,25 +55,45 @@ string Time(void) {
 }
 
 void backup(void) {
-	string log;
+	vector<string> allbackuplog;
+	string line;
+	string note;
+	string time = Time();
+	cout << "Please enter a note:";
+	cin.get();
+	getline(cin, note);
+	string str_backuplog;
 	ifstream fin;
 	ofstream fout;
-	fin.open("/Backup/log.txt", ios::in);
-	fin >> log;
-	fs::path folderPath = "/Backup/backup" + log;
+	fin.open("Backup/log.txt", ios::in);
+	getline(fin, str_backuplog);
+	cout << str_backuplog;
+	fs::path folderPath = "Backup/backup" + str_backuplog;
 	fin.close();
+	cout << folderPath;
 	if (!fs::exists(folderPath)) {
 		bool success = fs::create_directory(folderPath);
 	}
 	try {
-		fs::copy("/Date/Main/", "/Backup/backup" + log + "/", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+		fs::copy("Date/Main/", "Backup/backup" + str_backuplog + "/", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
 		std::cout << "Folder copied successfully." << std::endl;
 	}
 	catch (const std::filesystem::filesystem_error& e) {
 		std::cerr << "Folder copy failed: " << e.what() << std::endl;
 	}
-	fout.open("/Backup/log.txt", ios::out);
-	fout << stoi(log.c_str()) + 1;
+	fout.open("Backup/log.txt", ios::app);
+	fout << "\n" << time << "  " << note;
+	fout.close();
+	fin.open("Backup/log.txt");
+	while (getline(fin, line)) {
+		allbackuplog.push_back(line);
+	}
+	fin.close();
+	allbackuplog[0] = to_string(stoi(str_backuplog) + 1);
+	fout.open("Backup/log.txt", ios::out);
+	for (const auto& content : allbackuplog) {
+		fout << content << "\n";
+	}
 	fout.close();
 }
 
