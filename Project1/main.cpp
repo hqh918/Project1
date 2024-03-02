@@ -7,8 +7,8 @@
 namespace fs = std::filesystem;
 using namespace std;
 
-void backup(void);
-string Time(void); //获取当前时间并转为string类型
+void backup(void); // 备份功能函数
+string Time(void); // 获取当前时间并转为string类型
 
 const string path_state = "Date/State.txt";
 const string path_mainlog = "Date/log.txt";
@@ -40,7 +40,7 @@ int main() {
 		backup();
 	}
 	else {
-		//未完成
+		// 未完成
 	}
 	return 0;
 }
@@ -65,7 +65,7 @@ void backup(void) {
 	string str_backuplog;
 	ifstream fin;
 	ofstream fout;
-	fin.open("Backup/log.txt", ios::in);
+	fin.open(path_backuplog, ios::in);
 	getline(fin, str_backuplog);
 	cout << str_backuplog;
 	fs::path folderPath = "Backup/backup" + str_backuplog;
@@ -81,16 +81,16 @@ void backup(void) {
 	catch (const std::filesystem::filesystem_error& e) {
 		std::cerr << "Folder copy failed: " << e.what() << std::endl;
 	}
-	fout.open("Backup/log.txt", ios::app);
+	fout.open(path_backuplog, ios::app);
 	fout << "\n" << time << "  " << note;
 	fout.close();
-	fin.open("Backup/log.txt");
+	fin.open(path_backuplog);
 	while (getline(fin, line)) {
 		allbackuplog.push_back(line);
 	}
 	fin.close();
 	allbackuplog[0] = to_string(stoi(str_backuplog) + 1);
-	fout.open("Backup/log.txt", ios::out);
+	fout.open(path_backuplog, ios::out);
 	for (const auto& content : allbackuplog) {
 		fout << content << "\n";
 	}
