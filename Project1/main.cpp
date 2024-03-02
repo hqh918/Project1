@@ -43,6 +43,16 @@ int main() {
 	}
 	else {
 		// Î´Íê³É
+		string function;
+		cout << "----------------------------" << "\n" <<
+				"|EnterGrades     BackupDate|" << "\n" <<
+				"|AddStudent   DeleteStudent|" << "\n" <<
+				"|UpdateScore    FindStudent|" << "\n" <<
+				"|ViewAllStudent ExitProgram|" << "\n" <<
+				"----------------------------" << "\n";
+		cout << "Please select a function:";
+		getline(cin, function);
+		
 	}
 	return 0;
 }
